@@ -1,5 +1,5 @@
 import sys
-from wikidata_interaction import *
+from wiki.wikidata_interaction import *
 
 
 def main(argv):
