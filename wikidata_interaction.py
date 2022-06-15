@@ -4,6 +4,7 @@ Wikidata package project can be found here: https://pypi.org/project/Wikidata/
 
 Sources:
 [1] https://stackoverflow.com/questions/37079989/how-to-get-wikipedia-page-from-wikidata-id
+[2] https://stackoverflow.com/questions/70229075/extract-aliases-from-wikidata-dump-using-python
 """
 import requests
 from wikidata.client import Client
