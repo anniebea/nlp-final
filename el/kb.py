@@ -13,16 +13,25 @@ def load_entities():
     aliases = dict()
     with entites_loc.open("r", encoding="utf8") as csvfile:
         csvreader = csv.reader(csvfile, delimiter=",")
+        next(csvreader)
         for row in csvreader:
             qid = row[1]
             name = row[2]
             desc = row[3]
             aliasstring = row[4]
             aliasstring = aliasstring[:-1]
-            alias = aliasstring.split(";")
+            alias_list = aliasstring.split(";")
+            for itm in alias_list:
+                if itm != '':
+                    if aliases.get(itm) is not None:
+                        # print(str(qid) + " +++ " + str(itm))
+                        aliases[itm].append(qid)
+                    else:
+                        # print(str(qid) + " --- " + str(itm))
+                        aliases[itm] = [qid]
+
             names[qid] = name
             descriptions[qid] = desc
-            aliases[qid] = alias
     return names, descriptions, aliases
 
 
@@ -32,6 +41,9 @@ if __name__ == "__main__":
     doc = nlp(text)
     name_dict, desc_dict, alias_dict = load_entities()
 
+    # print("Cat Bells:")
+    # print(alias_dict["Cat Bells"])
+
     kb = KnowledgeBase(vocab=nlp.vocab, entity_vector_length=300)
 
     for qid, desc in desc_dict.items():
@@ -40,24 +52,25 @@ if __name__ == "__main__":
         kb.add_entity(entity=qid, entity_vector=desc_enc, freq=342)   # frequency is arbitrary for now
 
     for qid, name in name_dict.items():
-        if name != '':
-            kb.add_alias(alias=name, entities=[qid], probabilities=[1])
+        if alias_dict.get(name) is not None:
+            alias_dict[name].append(qid)
+        else:
+            alias_dict[name] = [qid]
 
-    for qid, aliases in alias_dict.items():
-        for alias in aliases:
-            if alias != '':
-                kb.add_alias(alias=alias, entities=[qid], probabilities=[0.3])
+    for alias, qids in alias_dict.items():
+        count = len(qids)
+        probs = list()
+        for i in range(count):
+            probs.append(0.0005)
+        kb.add_alias(alias=alias, entities=qids, probabilities=probs)
 
-
-    qids = name_dict.keys()
-    probs = [0.00003 for qid in qids]
-    kb.add_alias(alias="aliases", entities=qids, probabilities=probs)
+    # qids = name_dict.keys()
+    # probs = [0.00003 for qid in qids]
+    # kb.add_alias(alias="aliases", entities=qids, probabilities=probs)
 
     # print(f"Entities in the KB: {kb.get_entity_strings()}")   # will print all the QIDs
     # print(f"Aliases in the KB: {kb.get_alias_strings()}")     # will print all aliases
-    print(f"Candidates for 'Alps': {[c.entity_ for c in kb.get_alias_candidates('Alps')]}")
-    # print(f"Candidates for 'Annie': {[c.entity_ for c in kb.get_alias_candidates('Annie')]}")
 
-    # output_dir = Path.cwd()
-    # kb.dump(output_dir / "my_kb")
-    # nlp.to_disk(output_dir / "my_nlp")
+    output_dir = Path.cwd()
+    kb.to_disk(output_dir / "output_kb")
+    nlp.to_disk(output_dir / "output_nlp")
