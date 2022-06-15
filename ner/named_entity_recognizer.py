@@ -2,13 +2,14 @@ import nltk
 import spacy
 from spacy import displacy
 from spacy.tokens import Span
+from spacy.training.example import Example
 from pathlib import Path
 import en_core_web_sm
 import en_core_web_lg
 
-# pip install -U spacy==2.3.7
-# python -m spacy download en_core_web_sm-2.2.0 --direct
-# python -m spacy download en_core_web_lg-2.2.0 --direct
+# pip install -U spacy==3.3.1
+# python -m spacy download en_core_web_sm-3.3.0 --direct
+# python -m spacy download en_core_web_lg-3.3.0 --direct
 
 nlp = en_core_web_sm.load()
 
@@ -36,14 +37,14 @@ TRAIN_DATA =[ ("The Baltic Sea stretches from 53°N to 66°N latitude and from 1
               ("It communicates with the East China Sea via the Taiwan Strait.", {"entities": [(21, 39, "WATER"), (44, 61, "WATER")]}),
               ("It communicates with the Java Sea via the Karimata and Bangka Strait.", {"entities": [(21, 33, "WATER"), (38, 50, "WATER"), (55, 68, "WATER")]}),
               ("It communicates with the Philippine Sea via the Luzon Strait.", {"entities": [(21, 39, "WATER"), (44, 60, "WATER")]}),
-              ("It communicates with the Sulu Sea via the straits around Palawan (e.g. the Mindoro and Balabac Strait).", {"entities": [(21, 34, "WATER"), (57, 64, "AREA"), (71, 82, "WATER"), (87, 101, "WATER")]}),
+              ("It communicates with the Sulu Sea via the straits around Palawan (e.g. the Mindoro and Balabac Strait).", {"entities": [(21, 33, "WATER"), (57, 64, "AREA"), (71, 82, "WATER"), (87, 101, "WATER")]}),
               ("It communicates with the Strait of Malacca via the Strait of Singapore.", {"entities": [(21, 42, "WATER"), (47, 70, "WATER")]}),
               ("The controversial security deal struck between Solomon Islands and the Bank of China.", {"entities": [(47, 62, "COUNTRY"), (79, 84, "COUNTRY")]}),
               ("A leading Solomon Islands official has defended his country’s right to choose its allies.", {"entities": [(10, 25, "COUNTRY")]}),
               ("He is speaking to the Guardian in his first interview since the deal between China and Solomon Islands was leaked.", {"entities": [(77, 82, "COUNTRY"), (87, 102, "COUNTRY")]}),
               ("Australia should question whether it had been fair to Solomon Islands in its intense scrutiny of the deal.", {"entities": [(0, 9, "COUNTRY"), (54, 69, "COUNTRY")]}),
               ("Beck is believed to have been involved in negotiating the deal with China.", {"entities": [(68, 73, "COUNTRY")]}),
-              ("Beck said that Solomon Islands faced domestic challenges.", {"entities": [(10, 25, "COUNTRY")]}),
+              ("Beck said that Solomon Islands faced domestic challenges.", {"entities": [(15, 30, "COUNTRY")]}),
               ("Chronic unemployment, as well as frustrations with the policies and leadership of the prime minister, Manasseh Sogavare, were thought to be behind riots in Honiara last year that left three people dead.", {"entities": [(156, 163, "CITY")]}),
               ("Riga is the capital of Latvia and is home to 605802 inhabitants (2022), which is a third of Latvia's population.", {"entities": [(0, 4, "CITY"), (23, 29, "COUNTRY"), (92, 98, "COUNTRY")]}),
               ("Being significantly larger than other cities of Latvia, Riga is the country's primate city.", {"entities": [(48, 54, "COUNTRY"), (56, 60, "CITY")]}),
@@ -114,6 +115,26 @@ TRAIN_DATA =[ ("The Baltic Sea stretches from 53°N to 66°N latitude and from 1
               ("New Zealand's climate is basically moderate year round because of the nearby ocean that regulates the climate.  New Zealand enjoys a marine west coast climate, that on average produces sixty to eighty degree temperatures in January and forty to sixty degree temperatures in July.  Because it is surrounded by the ocean, New Zealand receives immense quantities of precipitation on both islands.  The average annual precipitation on the North Island is thirty to forty inches and on the South Island it is forty to fifty inches.  This climate produces mixed forests, mid-latitude deciduous forests, and temperate grassland vegetation.  The land is blanketed with small lakes and rivers that drain the highlands and empty into the ocean.  The extraordinary diversity of the physical geography found in the United States seems to have been duplicated in this relatively small country, where the ski slopes and the beaches may be only an hour apart.", {"entities": [(0, 11, "COUNTRY"), (112, 123, "COUNTRY"), (320, 331, "COUNTRY"), (431, 447, "AREA"), (481, 497, "AREA"), (799, 816, "COUNTRY")]}),
               ("New Zealand's government has contributed to its impressive standard of living.  New Zealand achieved independence from the United Kingdom on September 26, 1907.  The government was placed in Wellington, on the North Island, and still remains there today as the capital.  The government is a constitutional monarchy that was designed to resemble the United Kingdom government.  It includes an executive branch, legislative branch, judicial branch, and a King and Queen employed only as figureheads.  The military is divided into three branches, the New Zealand army, the Royal New Zealand Navy, and the Royal New Zealand Air Force.", {"entities": [(0, 11, "COUNTRY"), (80, 91, "COUNTRY"), (119, 137, "COUNTRY"), (191, 201, "CITY"), (206, 222, "AREA"), (345, 363, "COUNTRY"), (548, 559, "COUNTRY"), (576, 587, "COUNTRY"), (608, 619, "COUNTRY")]}),
               ("Thailand is a country in South East Asia.  Its neighboring countries are Cambodia on the east, Burma (now called Myanmar) on the west, Laos on the north, and Malaysia on the south.  The main river in Thailand is the Chao Phraya River which flows south out of the Mae Nam River.  The word nam means water in Thai.  Most of the rivers in Thailand start with Mae Nam something.  The Chao Phraya River (pronounced chow pee-ah) starts near the city of Singha Buri and flows south through Bangkok, the capital, and into the Gulf of Siam.", {"entities": [(0, 8, "COUNTRY"), (25, 40, "AREA"), (73, 81, "COUNTRY"), (95, 100, "COUNTRY"), (113, 120, "COUNTRY"), (135, 139, "COUNTRY"), (158, 166, "COUNTRY"), (200, 208, "COUNTRY"), (212, 233, "WATER"), (259, 276, "WATER"), (336, 344, "COUNTRY"), (376, 397, "WATER"), (447, 458, "CITY"), (483, 490, "CITY"), (514, 530, "WATER")]}),
+              ("Vilnius is the capital and largest city of Lithuania, with a population of 592,389 as of 2022.", {"entities": [(0, 7, "CITY"), (43, 52, "COUNTRY")]}),
+              ("The population of Vilnius's functional urban area, which stretches beyond the city limits, is estimated at 718,507 (as of 2020).", {"entities": [(18, 0, "CITY")]}),
+              ("According to the Vilnius territorial health insurance fund, there were 732,421 permanent inhabitants as of October 2020 in Vilnius city and Vilnius district municipalities combined.", {"entities": [(17, 24, "CITY"), (123, 135, "CITY"), (140, 156, "AREA")]}),
+              ("Vilnius is situated in southeastern Lithuania and is the second-largest city in the Baltic states, but according to the Bank of Latvia is expected to become the largest in 2025.", {"entities": [(0, 7, "CITY"), (36, 45, "COUNTRY"), (80, 97, "AREA"), (128, 134, "COUNTRY")]}),
+              ("It is the seat of Lithuania's national government and the Vilnius District Municipality.", {"entities": [(18, 27, "COUNTRY"), (54, 74, "AREA")]}),
+              ("Vilnius is classified as a Gamma global city according to GaWC studies, and is known for the architecture in its Old Town, declared a UNESCO World Heritage Site in 1994.", {"entities": [(0, 7, "CITY")]}),
+              ("Before World War II, Vilnius was one of the largest Jewish centres in Europe. ", {"entities": [(21, 28, "CITY"), (70, 76, "AREA")]}),
+              ("Its Jewish influence has led to its nickname 'the Jerusalem of Lithuania'. ", {"entities": [(50, 59, "CITY"), (63, 72, "COUNTRY")]}),
+              ("Napoleon called it 'the Jerusalem of the North' as he was passing through in 1812.", {"entities": [(24, 33, "CITY")]}),
+              ("In 2009, Vilnius was the European Capital of Culture, together with Linz, Austria.", {"entities": [(9, 16, "CITY"), (68, 72, "CITY"), (74, 81, "COUNTRY")]}),
+              ("In 2021, Vilnius was named among top-25 fDi's Global Cities of the Future – one of the most forward-thinking cities with the greatest potential in the World.", {"entities": [(9, 16, "CITY")]}),
+              ("New York, often called New York City (NYC), is the most populous city of both New York State and the United States.", {"entities": [(0, 8, "CITY"), (23, 36, "CITY"), (78, 92, "AREA"), (97, 114, "COUNTRY")]}),
+              ("With a 2020 population of 8,804,190 distributed over 300 square miles (780 km2) and divided into five boroughs, New York City is also the most densely populated major city in the United States.", {"entities": [(112, 125, "CITY"), (175, 192, "COUNTRY")]}),
+              ("Located at the southern tip of the state of New York, the city is the center of the New York metropolitan area, the largest metropolitan area in the world by urban area.", {"entities": [(31, 52, "AREA"), (80, 110, "AREA")]}),
+              ("With over 20.1 million people in its metropolitan statistical area and 23.5 million in its combined statistical area as of 2020, New York is one of the world's most populous megacities.", {"entities": [(129, 137, "CITY")]}),
+              ("New York City has been described as the cultural, financial, and media capital of the world, and is a significant influence on commerce, entertainment, research, technology, education, politics, tourism, dining, art, fashion, and sports.", {"entities": [(0, 13, "CITY")]}),
+              ("Home to the headquarters of the United Nations, New York is an important center for international diplomacy, an established safe haven for global investors.", {"entities": [(48, 56, "CITY")]}),
+              ("The five boroughs - Brooklyn (Kings County), Queens (Queens County), Manhattan (New York County), the Bronx (Bronx County), and Staten Island (Richmond County) - were created when local governments were consolidated into a single municipal entity in 1898.", {"entities": [(20, 28, "AREA"), (30, 42, "AREA"), (45, 51, "AREA"), (53, 66, "AREA"), (69, 78, "AREA"), (80, 95, "AREA"), (98, 107, "AREA"), (109, 121, "AREA"), (128, 141, "AREA"), (143, 158, "AREA")]}),
+              ("The city and its metropolitan area constitute the premier gateway for legal immigration to the United States.", {"entities": [(91, 108, "COUNTRY")]}),
+              ("As many as 800 languages are spoken in New York.", {"entities": [(39, 47, "CITY")]}),
               #("", {"entities": [(0, 0, "COUNTRY")]}),
            ]
 
@@ -142,8 +163,8 @@ def update_model():
     # Begin training by disabling other pipeline components
     with nlp.disable_pipes(*other_pipes):
       sizes = compounding(1.0, 4.0, 1.001)
-      # Training for 1000 iterations     
-      for itn in range(1000):
+      # Training for 100 iterations     
+      for itn in range(100):
         # shuffle examples before training
         random.shuffle(TRAIN_DATA)
         # batch up the examples using spaCy's minibatch
@@ -152,8 +173,15 @@ def update_model():
         losses = {}
         for batch in batches:
           texts, annotations = zip(*batch)
+
+          example = []
+          # Update the model with iterating each text
+          for i in range(len(texts)):
+              doc = nlp.make_doc(texts[i])
+              example.append(Example.from_dict(doc, annotations[i]))
+
           # Calling update() over the iteration
-          nlp.update(texts, annotations, sgd=optimizer, drop=0.35, losses=losses)
+          nlp.update(example, sgd=optimizer, drop=0.35, losses=losses)
           print("Losses", losses)
 
     # Saving the model to the output directory
