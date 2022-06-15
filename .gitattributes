@@ -1,4 +1,9 @@
+ner/attribute_ruler/* -text
+ner/lemmatizer/* -text
 ner/ner/* -text
 ner/parser/* -text
+ner/senter/* -text
 ner/tagger/* -text
+ner/tok2vec/* -text
 ner/vocab/* -text
+ner/config.cfg -text
