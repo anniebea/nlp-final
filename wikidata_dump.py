@@ -25,8 +25,8 @@ i = 0
 df_record_all = pd.DataFrame(columns=[
     'id',
     'english_label',
-    'english_desc'
-    # 'english_aliases'
+    'english_desc',
+    'english_aliases'
 ])
 
 
@@ -57,39 +57,42 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     for record in wikidata(args.dumpfile):
-        if pydash.has(record, 'claims.P625'):
+        if pydash.has(record, 'claims.P625') and pydash.has(record, 'labels.en.value') and pydash.has(record, 'descriptions.en.value'):
             print('i = ' + str(i) + ' item ' + record['id'] + '  started!' + '\n')
             item_id = pydash.get(record, 'id')
             english_label = pydash.get(record, 'labels.en.value')
             english_desc = pydash.get(record, 'descriptions.en.value')
-            # english_aliases = set()
-            # if pydash.has(record, 'aliases.en'):
-            #     for itm in pydash.get(record, 'aliases.en'):
-            #         english_aliases.add(itm['value'])
+            english_aliases = ""
+            if pydash.has(record, 'aliases.en'):
+                tempset = set()
+                for itm in pydash.get(record, 'aliases.en'):
+                    tempset.add(itm['value'])
+                for itm in tempset:
+                    english_aliases += itm + ";"
             df_record = pd.DataFrame(
                 {
                     'id': item_id,
                     'english_label': english_label,
-                    'english_desc': english_desc
-                    # 'english_aliases': english_aliases
+                    'english_desc': english_desc,
+                    'english_aliases': english_aliases
                 }, index=[i])
             df_record_all = df_record_all.append(df_record, ignore_index=True)
             i += 1
             print(i)
             if (i % 5000 == 0):
                 pd.DataFrame.to_csv(df_record_all,
-                                    path_or_buf='D:\\Uni\\6SEM\\NLP\\extracted\\till_' + record['id'] + '_item.csv')
+                                    path_or_buf='D:\\Uni\\6SEM\\NLP\\extracted_v2\\till_' + record['id'] + '_item.csv')
                 print('i = ' + str(i) + ' item ' + record['id'] + '  Done!')
                 print('CSV exported')
                 df_record_all = pd.DataFrame(columns=[
                     'id',
                     'english_label',
-                    'english_desc'
-                    # 'english_aliases'
+                    'english_desc',
+                    'english_aliases'
                 ])
             else:
                 continue
-        # pd.DataFrame.to_csv(df_record_all,
-        #                     path_or_buf='D:\\Uni\\6SEM\\NLP\\extracted\\final_csv_till_' + record['id'] + '_item.csv')
-        # print('i = ' + str(i) + ' item ' + record['id'] + '  Done!')
-        # print('All items finished, final CSV exported!')
+    # pd.DataFrame.to_csv(df_record_all,
+    #                     path_or_buf='D:\\Uni\\6SEM\\NLP\\extracted\\final_csv_till_' + record['id'] + '_item.csv')
+    # print('i = ' + str(i) + ' item ' + record['id'] + '  Done!')
+    # print('All items finished, final CSV exported!')
