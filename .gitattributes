@@ -1,0 +1,4 @@
+ner/ner/* -text
+ner/parser/* -text
+ner/tagger/* -text
+ner/vocab/* -text
