@@ -14,6 +14,9 @@ nlp = en_core_web_sm.load()
 # Getting the pipeline component
 ner = nlp.get_pipe('ner')
 
+# Location of saved model
+model_dir = Path(__file__).parent
+
 # New label to add
 LABELS = ["WATER", "AREA", "COUNTRY", "CITY", "MANMADE"]
 
@@ -103,10 +106,13 @@ TRAIN_DATA =[ ("The Baltic Sea stretches from 53°N to 66°N latitude and from 1
               ("Calapan is Mimaropa's regional center.", {"entities": [(0, 7, "CITY"), (11, 19, "AREA")]}),
               ("However, most regional government offices such as the Department of Public Works and Highways and the Department of Budget and Management are in Quezon City, Metro Manila.", {"entities": [(145, 156, "CITY"), (158, 170, "AREA")]}),
               ("However, on August 19, 2005, then-President Arroyo issued Administrative Order No. 129 to put in abeyance Executive Order No. 429 pending a review.", {"entities": []}),
-              #("", {"entities": [(0, 0, "COUNTRY")]}),
-              #("", {"entities": [(0, 0, "COUNTRY")]}),
-              #("", {"entities": [(0, 0, "COUNTRY")]}),
-              #("", {"entities": [(0, 0, "COUNTRY")]}),
+              ("I went to China at 4th April, with my grandma and grandpa. That day, we got up at 7 o*clock in the morning. We went on the ship at 9:40am. When we reached China, we saw our relation, they saw us and helped us to carry the luggage. They are very kind to us. After about 1 hour, traveled by car, we reached home, it was about 1 o*clock, we were very hungry, they*ve already cooked the lunch for us. After lunch, we walked around in the village . When we back home, we chatted until dinner was ready. There was on toilet there, so my grandpa and me cannot eat more and more although all things were very good. After a terrible night, we went to another village. We went in the bus about 3 hours, after we reached there, it was about 4:30pm. I don*t think we could walked around the village again. The house that we lived was designed by my grandpa, we lived happily (very happy) there. -We had water, Town gas, light, TV * * Oh, great! We went back to Hong Kong at 8th. After a the tea break at the pipe, we got onto the ship at 4:00pm. I thought I was too full, I was seasick! We reached home at exactly 6 o*clock. My mom was already cooked the dinner for us. After we enjoyed the dinner, I went back home. At home , I had a hot bath that it was one of the best enjoys in my life.", {"entities": [(10, 15, "COUNTRY"), (155, 160, "COUNTRY"), (949, 958, "CITY")]}),
+              ("We arrived at Omar Torrijos airport via American Airlines early in the afternoon. We purchased our required tourist cards (3 balboas, as US dollars are called in Panama) at the airport, then caught a taxi for the 18 mile ride to our downtown hotel. The ride in the battered, un-airconditioned car was rather expensive (30 balboas), but the driver spoke English and was very friendly. We arrived at the hotel and checked in. While my dad was checking in I bought a guidebook in the hotel lobby and read up on the history of Panama City. The original city was founded in 1519 by Pedro Arias Davila, known as Pedrarias the Cruel, because of his eradication of all but three of the local Indian tribes during his tenure in Panama. Davila used the city as a place to store Incan gold  before it was shipped to Spain. The original city was sacked and burned in 1671 by a group of buccaneers led by Henry Morgan. The city was rebuilt within a year, this time on a peninsula 18 miles away and surrounded by a strong wall. This old Spanish city is now the in the middle downtown Panama City.", {"entities": [(14, 35, "MANMADE"), (162, 168, "COUNTRY"), (523, 534, "CITY"), (719, 725, "COUNTRY"), (805, 810, "COUNTRY"), (1070, 1081, "CITY")]}),
+              ("Brazil lies between thirty five degrees west longitude and seventy five degrees west longitude.  Brazil also runs between five degrees north latitude and thirty five degrees south latitude.  Brazil is located in mainly the eastern part of South America.  This country sits in mostly the southern hemisphere of the world.  Being completely on the west side of the world, Brazil is not all in the south side of the world.  With the equator running through north Brazil, a small portion of Brazil, a small portion of Brazil is in the northern hemisphere.  Brazil is bordered by a number of South American countries.  Brazil borders Uruguay to the north; Argentina, Paraguay, Bolivia, and Peru to the east; Bogota to the southeast; Venezuela, Guyana, Suriname, and French Guiana to the south; and the Atlantic Ocean to the west.", {"entities": [(0, 6, "COUNTRY"), (97, 103, "COUNTRY"), (191, 197, "COUNTRY"), (239, 252, "AREA"), (370, 376, "COUNTRY"), (460, 466, "COUNTRY"), (487, 493, "COUNTRY"), (514, 520, "COUNTRY"), (553, 559, "COUNTRY"), (614, 620, "COUNTRY"), (629, 636, "COUNTRY"), (651, 660, "COUNTRY"), (662, 670, "COUNTRY"), (672, 679, "COUNTRY"), (685, 689, "COUNTRY"), (703, 709, "COUNTRY"), (728, 737, "COUNTRY"), (739, 745, "COUNTRY"), (747, 755, "COUNTRY"), (761, 774, "COUNTRY"), (793, 811, "WATER")]}),
+              ("The well-known country of New Zealand is a small, resourceful nation located 1,000 miles off Australia's south east coast. New Zealand has an impressive economy that continues to grow, a physical landscape that attracts people from around the globe, and although small, New Zealand is a respected nation for its advanced civilization and stable government. The geography of this prestigious nation can be described through five principal categories, the physical geography, the cultural geography, the citizens' standard of living, the government, and the nation's economy. New Zealand is located in the southern hemisphere, with an absolute location of 37 degrees south longitude to 48 degrees south longitude and 167 degrees east latitude to 177 degrees east latitude. It is composed of two major islands named the North and South Islands, and the total land area of the nation, approximately divided equally between the two islands, is 103,470 square miles. Surprisingly, only 2 percent of the land area is arable. New Zealand has an abundance of natural resources, explaining why the country is so wealthy compared to other nations. These resources include fertile grazing land, oil and gas, iron, coal, timber, and excellent fishing waters.", {"entities": [(26, 37, "COUNTRY"), (93, 102, "COUNTRY"), (123, 134, "COUNTRY"), (270, 281, "COUNTRY"), (574, 585, "COUNTRY"), (813, 822, "AREA"), (827, 840, "AREA"), (1018, 1029, "COUNTRY")]}),
+              ("New Zealand's climate is basically moderate year round because of the nearby ocean that regulates the climate.  New Zealand enjoys a marine west coast climate, that on average produces sixty to eighty degree temperatures in January and forty to sixty degree temperatures in July.  Because it is surrounded by the ocean, New Zealand receives immense quantities of precipitation on both islands.  The average annual precipitation on the North Island is thirty to forty inches and on the South Island it is forty to fifty inches.  This climate produces mixed forests, mid-latitude deciduous forests, and temperate grassland vegetation.  The land is blanketed with small lakes and rivers that drain the highlands and empty into the ocean.  The extraordinary diversity of the physical geography found in the United States seems to have been duplicated in this relatively small country, where the ski slopes and the beaches may be only an hour apart.", {"entities": [(0, 11, "COUNTRY"), (112, 123, "COUNTRY"), (320, 331, "COUNTRY"), (431, 447, "AREA"), (481, 497, "AREA"), (799, 816, "COUNTRY")]}),
+              ("New Zealand's government has contributed to its impressive standard of living.  New Zealand achieved independence from the United Kingdom on September 26, 1907.  The government was placed in Wellington, on the North Island, and still remains there today as the capital.  The government is a constitutional monarchy that was designed to resemble the United Kingdom government.  It includes an executive branch, legislative branch, judicial branch, and a King and Queen employed only as figureheads.  The military is divided into three branches, the New Zealand army, the Royal New Zealand Navy, and the Royal New Zealand Air Force.", {"entities": [(0, 11, "COUNTRY"), (80, 91, "COUNTRY"), (119, 137, "COUNTRY"), (191, 201, "CITY"), (206, 222, "AREA"), (345, 363, "COUNTRY"), (548, 559, "COUNTRY"), (576, 587, "COUNTRY"), (608, 619, "COUNTRY")]}),
+              ("Thailand is a country in South East Asia.  Its neighboring countries are Cambodia on the east, Burma (now called Myanmar) on the west, Laos on the north, and Malaysia on the south.  The main river in Thailand is the Chao Phraya River which flows south out of the Mae Nam River.  The word nam means water in Thai.  Most of the rivers in Thailand start with Mae Nam something.  The Chao Phraya River (pronounced chow pee-ah) starts near the city of Singha Buri and flows south through Bangkok, the capital, and into the Gulf of Siam.", {"entities": [(0, 8, "COUNTRY"), (25, 40, "AREA"), (73, 81, "COUNTRY"), (95, 100, "COUNTRY"), (113, 120, "COUNTRY"), (135, 139, "COUNTRY"), (158, 166, "COUNTRY"), (200, 208, "COUNTRY"), (212, 233, "WATER"), (259, 276, "WATER"), (336, 344, "COUNTRY"), (376, 397, "WATER"), (447, 458, "CITY"), (483, 490, "CITY"), (514, 530, "WATER")]}),
               #("", {"entities": [(0, 0, "COUNTRY")]}),
            ]
 
@@ -124,20 +130,19 @@ pipe_exceptions = ['ner']
 # List of pipes which should remain unaffected in training
 other_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
 
-# Location of saved model
-model_dir = Path(__file__).parent
-should_update_model = 0
+# Function to update and retrain model
+def update_model():
+    global nlp, ner, model_dir, LABELS, TRAIN_DATA, optimizer, move_names, pipe_exceptions, other_pipes
 
-if (should_update_model == 1):
-    # Importing requirements
+  # Importing requirements
     from spacy.util import minibatch, compounding
     import random
 
     # Begin training by disabling other pipeline components
     with nlp.disable_pipes(*other_pipes):
       sizes = compounding(1.0, 4.0, 1.001)
-      # Training for 500 iterations     
-      for itn in range(500):
+      # Training for 1000 iterations     
+      for itn in range(1000):
         # shuffle examples before training
         random.shuffle(TRAIN_DATA)
         # batch up the examples using spaCy's minibatch
@@ -154,31 +159,41 @@ if (should_update_model == 1):
     nlp.to_disk(model_dir)
     print("Saved model")
 
-# Loading the model from the directory
-print("Loading created model...")
-nlp = spacy.load(model_dir)
-assert nlp.get_pipe("ner").move_names == move_names
+def find_entities():
+    global nlp, ner, model_dir, LABELS, TRAIN_DATA, optimizer, move_names, pipe_exceptions, other_pipes
+    
+    should_update_model = input("Do you want to retrain the model (0/1): ")
 
-#text = input("Input text: ")
-text = "Mimaropa (usually capitalized in official government documents), formally known as the Southwestern Tagalog Region, is an administrative region in the Philippines. It was also formerly designated as Region IV-B until 2016. It is one of two regions in the country having no land border with another region (the other being Eastern Visayas). The name is an acronym combination of its constituent provinces: Mindoro (divided into Occidental Mindoro and Oriental Mindoro), Marinduque, Romblon and Palawan. The region was part of the now-defunct Southern Tagalog region until May 17, 2002. On May 23, 2005, Palawan and the highly urbanized city of Puerto Princesa were moved to the region of Western Visayas by Executive Order No. 429. However, on August 19, 2005, then-President Arroyo issued Administrative Order No. 129 to put in abeyance Executive Order No. 429 pending a review. On July 17, 2016, Republic Act No. 10879 formally established the Southwestern Tagalog Region to be known as Mimaropa discontinuing the 'Region IV-B' designation, however no boundary changes were involved. Calapan is Mimaropa's regional center. However, most regional government offices such as the Department of Public Works and Highways and the Department of Budget and Management are in Quezon City, Metro Manila. "
+    if (should_update_model != '0'):
+        update_model()
 
-article = nlp(text)
-found_entities = dict([(str(x), x.label_) for x in nlp(str(article)).ents])
-print('\n' + 'Found entities:' + '\n' + str(found_entities))
+    # Loading the model from the directory
+    print("Loading created model...")
+    nlp = spacy.load(model_dir)
+    assert nlp.get_pipe("ner").move_names == move_names
 
-colors = {"WATER": "#6281cc", "AREA": "#60ad47", "COUNTRY": "#d95b5b", "CITY": "#de8d5b", "MANMADE": "#96e3e3"}
-options = {"colors": colors}
+    #text = input("Input text: ")
+    text = "The well-known country of New Zealand is a small, resourceful nation located 1,000 miles off Australia's south east coast.  New Zealand has an impressive economy that continues to grow, a physical landscape that attracts people from around the globe, and although small, New Zealand is a respected nation for its advanced civilization and stable government.  The geography of this prestigious nation can be described through five principal categories, the physical geography,  the cultural geography, the citizens' standard of living, the government, and the nation's economy. New Zealand is located in the southern hemisphere, with an absolute location of 37 degrees south longitude to 48 degrees south longitude and 167 degrees east latitude to 177 degrees east latitude.  It is composed of two major islands named the North and South Islands, and the total land area of the nation, approximately divided equally between the two islands, is 103,470 square miles.  Surprisingly, only 2 percent of the land area is arable.  New Zealand has an abundance of natural resources, explaining why the country is so wealthy compared to other nations.  These resources include fertile grazing land, oil and gas, iron, coal, timber, and excellent fishing waters."
 
-print('\n' + "Loading existing model...")
-nlp = en_core_web_lg.load()
-original_entities = dict([(str(x), 'Uncategorized') for x in nlp(str(article)).ents if x.label_ == 'GPE' or x.label_ == 'LOC'])
-print('\n' + 'Found entities:' + '\n' + str(original_entities))
-#article = nlp(text)
-#options = {"ents": ["GPE", "LOC"]}
+    article = nlp(text)
+    found_entities = dict([(str(x), x.label_) for x in nlp(str(article)).ents])
+    print('\n' + 'Found entities:' + '\n' + str(found_entities))
 
-print('\n' + "Combining results...")
-combined_entities = original_entities
-combined_entities.update(found_entities)
-print('\n' + 'Combined found entities:' + '\n' + str(combined_entities))
+    colors = {"WATER": "#6281cc", "AREA": "#60ad47", "COUNTRY": "#d95b5b", "CITY": "#de8d5b", "MANMADE": "#96e3e3"}
+    options = {"colors": colors}
 
-displacy.serve(article, style="ent", options=options) #http://localhost:5000
+    print('\n' + "Loading existing model...")
+    nlp = en_core_web_lg.load()
+    original_entities = dict([(str(x), 'Uncategorized') for x in nlp(str(article)).ents if x.label_ == 'GPE' or x.label_ == 'LOC'])
+    print('\n' + 'Found entities:' + '\n' + str(original_entities))
+
+    print('\n' + "Combining results...")
+    combined_entities = original_entities
+    combined_entities.update(found_entities)
+    #print('\n' + 'Combined found entities:' + '\n' + str(combined_entities))
+
+    #displacy.serve(article, style="ent", options=options) #http://localhost:5000
+
+    return combined_entities
+
+print('\n' + 'Combined found entities:' + '\n' + str(find_entities()))
