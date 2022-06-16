@@ -311,7 +311,14 @@ TRAIN_DATA = [("The Baltic Sea stretches from 53°N to 66°N latitude and from 1
               "The city and its metropolitan area constitute the premier gateway for legal immigration to the United States.",
               {"entities": [(91, 108, "COUNTRY")]}),
               ("As many as 800 languages are spoken in New York.", {"entities": [(39, 47, "CITY")]}),
-              # ("", {"entities": [(0, 0, "COUNTRY")]}),
+              ("Olive Morris (1952–1979) was a Jamaican-born and British-based community leader and activist.", 
+              {"entities": []}),
+              ("She participated in the Black nationalist, feminist and squatters' rights campaigns of the 1970s.", 
+              {"entities": []}),
+              ("She joined the British Black Panthers, occupied buildings in Brixton, South London, and became a key organizer in the Black Women's Movement in the United Kingdom.", 
+              {"entities": [(61, 68, "CITY"), (70, 82, "AREA"), (144, 162, "COUNTRY")]}),
+              ("In London, Morris co-founded the Brixton Black Women's Group and the Organization of Women of African and Asian Descent; when she studied at the Victoria University of Manchester, she was involved in the Manchester Black Women's Co-operative and also travelled to China with the Society for Anglo-Chinese Understanding.", 
+              {"entities": [(3, 9, "CITY"), (33, 40, "CITY"), (168, 178, "CITY"), (204, 214, "CITY"), (264, 269, "COUNTRY")]}),
               ]
 
 # Adding labels to the `ner`
@@ -340,8 +347,8 @@ def update_model():
     # Begin training by disabling other pipeline components
     with nlp.disable_pipes(*other_pipes):
         sizes = compounding(1.0, 4.0, 1.001)
-        # Training for 100 iterations
-        for itn in range(100):
+        # Training for 500 iterations
+        for itn in range(500):
             # shuffle examples before training
             random.shuffle(TRAIN_DATA)
             # batch up the examples using spaCy's minibatch
