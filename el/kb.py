@@ -36,15 +36,19 @@ other_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
 
 # Loading entities from csv file
 def load_entities():
-    entites_loc = Path("D:\\Uni\\6SEM\\NLP\\extracted_v2\\till_Q166717_item.csv")
+    # entites_loc = Path("D:\\Uni\\6SEM\\NLP\\extracted_v2\\till_Q166717_item.csv")
+    entites_loc = Path("C:\\Users\\anitr\\OneDrive\\Documents\\__University\\6sem\\DAB-VAL\\extracted_v1.5\\till_Q58226_item.csv")
 
     names = dict()
     descriptions = dict()
     aliases = dict()
+    i = 0
     with entites_loc.open("r", encoding="utf8") as csvfile:
         csvreader = csv.reader(csvfile, delimiter=",")
         next(csvreader)
         for row in csvreader:
+            i += 1
+            print("processed row: " + str(i))
             qid = row[1]
             name = row[2]
             desc = row[3]
@@ -99,65 +103,13 @@ def create_kb(vocabs):
     return kb
 
 
-# Function to update and retrain model
-def update_model():
-    global nlp, linker, model_dir, TEXTS, optimizer
-
-    # Importing requirements
-    from spacy.util import minibatch, compounding
-    import random
-
-    # Begin training by disabling other pipeline components
-    with nlp.disable_pipes(*other_pipes):
-        sizes = compounding(1.0, 4.0, 1.001)
-        # Training for 100 iterations
-        for itn in range(100):
-            # shuffle examples before training
-            random.shuffle(TEXTS)
-            # batch up the examples using spaCy's minibatch
-            batches = minibatch(TEXTS, size=sizes)
-            # dictionary to store losses
-            losses = {}
-            for batch in batches:
-                texts, annotations = zip(*batch)
-
-                example = []
-                # Update the model with iterating each text
-                for i in range(len(texts)):
-                    doc = nlp.make_doc(texts[i])
-                    example.append(Example.from_dict(doc, annotations[i]))
-
-                # Calling update() over the iteration
-                nlp.update(example, sgd=optimizer, drop=0.35, losses=losses)
-                print("Losses", losses)
-
-    # Saving the model to the output directory
-    nlp.to_disk(model_dir)
-    print("Saved model")
-
-
 if __name__ == "__main__":
+    test_text = "Belgium, also known as Kingdom of Belgium, is a country in Europe"
+    doc = nlp(test_text)
 
-    # kb = create_kb()
+    create_kb("--")
+    print("Success!")
 
-    testtext = "Belgium, also known as Kingdom of Belgium, is a country in Europe"
-    doc = nlp(testtext)
+    # linker = nlp.add_pipe("entity_linker")
+    # linker.set_kb(create_kb)
 
-    linker = nlp.add_pipe("entity_linker")
-    linker.set_kb(create_kb)
-    ds = linker.predict([doc])
-
-    # optimizer = nlp.initialize()
-    # losses = entity_linker.update(examples, sgd=optimizer)
-
-    # other_pipes = [pipe for pipe in nlp.pipe_names if pipe != "entity_linker"]
-    # # here should be the call to update model
-    # with nlp.disable_pipes(*other_pipes):
-    #     optimizer = nlp.initialize()
-    #     # ...
-    #     nlp.update()
-    #
-    # doc = nlp(TEXTS[0])
-    #
-    # for ent in doc.ents:
-    #     print(ent.text, ent.label_, ent.kb_id_)
