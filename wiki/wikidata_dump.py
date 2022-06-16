@@ -60,6 +60,7 @@ if __name__ == "__main__":
     for record in wikidata(args.dumpfile):
         item_id = pydash.get(record, 'id')
         if int(item_id[1:]) < 20000000:
+        # if int(item_id[1:]) < 2000:
             if pydash.has(record, 'claims.P625') \
                     and pydash.has(record, 'labels.en.value') \
                     and pydash.has(record, 'descriptions.en.value'):
@@ -98,6 +99,9 @@ if __name__ == "__main__":
                     ])
             else:
                 continue
+        else:
+            print(str(item_id))
+            continue
     # pd.DataFrame.to_csv(df_record_all,
     #                     path_or_buf='D:\\Uni\\6SEM\\NLP\\extracted\\final_csv_till_' + record['id'] + '_item.csv')
     # print('i = ' + str(i) + ' item ' + record['id'] + '  Done!')

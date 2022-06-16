@@ -20,19 +20,7 @@ TRAIN_DATA = [("The Baltic Sea stretches from 53°N to 66°N latitude and from 1
                {"entities": [(18, 30, "Q97")]}),
               ]
 
-nlp = spacy.load("en_core_web_lg")
-vocab = nlp.vocab
-
-# optimizer = nlp.resume_training()
-# model_dir = Path("C:\\Users\\anitr\\OneDrive\\Documents\\__University\\6sem\\DAB-VAL\\NLP-final\\el\\output_model")
-
-
-# List of pipes you want to train
-pipe_exceptions = ['entity_linker']
-
-# List of pipes which should remain unaffected in training
-other_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
-
+nlp = spacy.load(Path.cwd() / "output_nlp")
 
 # Loading entities from csv file
 def load_entities():
@@ -70,7 +58,7 @@ def load_entities():
 
 
 # creating knowledge base
-def create_kb(vocabs):
+def create_kb(vocab=nlp.vocab):
     name_dict, desc_dict, alias_dict = load_entities()
 
     kb = KnowledgeBase(vocab=vocab, entity_vector_length=300)
@@ -100,16 +88,10 @@ def create_kb(vocabs):
     output_dir = Path.cwd()
     kb.to_disk(output_dir / "output_kb")
     nlp.to_disk(output_dir / "output_nlp")
+
     return kb
 
 
 if __name__ == "__main__":
-    test_text = "Belgium, also known as Kingdom of Belgium, is a country in Europe"
-    doc = nlp(test_text)
-
-    create_kb("--")
-    print("Success!")
-
-    # linker = nlp.add_pipe("entity_linker")
-    # linker.set_kb(create_kb)
-
+    create_kb()
+    print("Successfully created KB!")
